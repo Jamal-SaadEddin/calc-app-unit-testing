@@ -17,7 +17,14 @@ function calculator(num1, operation1, num2, operation2 = undefined, num3 = 0) {
       operation2 !== undefined)
   )
     throw new Error("Invalid operator");
-  else if (operation2 && num3) {
+
+  if (num1 > 1000 || num2 > 1000 || num3 > 1000) {
+    if (num1 > 1000) num1 = 0;
+    else if (num2 > 1000) num2 = 0;
+    else if (num3 > 1000) num3 = 0;
+  }
+
+  if (operation2) {
     let total = 0;
 
     if (operation1 === "*" || operation1 === "/") {
