@@ -1,15 +1,8 @@
-function calculator(
-  num1,
-  operation1,
-  num2,
-  operation2 = undefined,
-  num3 = undefined
-) {
+function calculator(num1, operation1, num2, operation2 = undefined, num3 = 0) {
   if (
     typeof num1 !== "number" ||
     typeof num2 !== "number" ||
-    typeof num3 !== "number" ||
-    typeof num3 !== "undefined"
+    typeof num3 !== "number"
   )
     throw new Error("Invalid input type");
   else if (
@@ -67,3 +60,5 @@ function calculator(
     else if (operation1 === "/") return num1 / num2;
   }
 }
+
+module.exports = calculator;
