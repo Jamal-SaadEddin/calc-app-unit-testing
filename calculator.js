@@ -1,23 +1,25 @@
-function calculator(num1, operation1, num2, operation2 = undefined, num3 = 0) {
-  if (
-    typeof num1 !== "number" ||
-    typeof num2 !== "number" ||
-    typeof num3 !== "number"
-  )
-    throw new Error("Invalid input type");
+function validateType(array, type) {
+  for (let i = 0; i < array.length; i++)
+    if (typeof array[i] !== type) throw new Error("Invalid input type");
+  return;
+}
 
-  if (
-    (operation1 !== "+" &&
-      operation1 !== "-" &&
-      operation1 !== "*" &&
-      operation1 !== "/") ||
-    (operation2 !== "+" &&
-      operation2 !== "-" &&
-      operation2 !== "*" &&
-      operation2 !== "/" &&
-      operation2 !== undefined)
-  )
-    throw new Error("Invalid operator");
+function validateOperators(array) {
+  for (let i = 0; i < array.length; i++)
+    if (
+      array[i] !== "+" &&
+      array[i] !== "-" &&
+      array[i] !== "*" &&
+      array[i] !== "/" &&
+      array[i] !== undefined
+    )
+      throw new Error("Invalid operator");
+  return;
+}
+
+function calculator(num1, operation1, num2, operation2 = undefined, num3 = 0) {
+  validateType([num1, num2, num3], "number");
+  validateOperators([operation1, operation2]);
 
   if (num1 > 1000) num1 = 0;
   if (num2 > 1000) num2 = 0;
