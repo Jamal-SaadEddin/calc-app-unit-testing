@@ -17,7 +17,15 @@ function validateOperators(array) {
   return;
 }
 
-function calculator(num1, operation1, num2, operation2 = undefined, num3 = 0) {
+function calculator(calculatorInputs) {
+  var {
+    num1,
+    operation1,
+    num2,
+    operation2 = undefined,
+    num3 = 0,
+  } = calculatorInputs;
+
   validateType([num1, num2, num3], "number");
   validateOperators([operation1, operation2]);
 
