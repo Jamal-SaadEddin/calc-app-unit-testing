@@ -1,21 +1,39 @@
+const OPERATIONS = ["+", "-", "*", "/", undefined];
+const NUMBER_LIMIT = 1000;
+
 function validateType(array, type) {
-  for (let i = 0; i < array.length; i++)
-    if (typeof array[i] !== type) throw new Error("Invalid input type");
-  return;
+  array.forEach((element) => {
+    if (typeof element !== type) throw new Error("Invalid input type");
+  });
 }
 
 function validateOperators(array) {
-  for (let i = 0; i < array.length; i++)
-    if (
-      array[i] !== "+" &&
-      array[i] !== "-" &&
-      array[i] !== "*" &&
-      array[i] !== "/" &&
-      array[i] !== undefined
-    )
-      throw new Error("Invalid operator");
-  return;
+  array.forEach((element) => {
+    if (!OPERATIONS.includes(element)) throw new Error("Invalid operator");
+  });
 }
+
+function applyOperation(num1, num2, operation) {
+  switch (operation) {
+    case "+":
+      return num1 + num2;
+    case "-":
+      return num1 - num2;
+    case "*":
+      return num1 * num2;
+    case "/":
+      if (num2 === 0) throw new Error("Division by zero");
+      return num1 / num2;
+
+    default:
+      throw new Error("Unknown operation");
+  }
+}
+
+const precedence = (op) => {
+  if (op === "+" || op === "-") return 1;
+  if (op === "*" || op === "/") return 2;
+};
 
 function calculator(calculatorInputs) {
   var {
@@ -29,51 +47,21 @@ function calculator(calculatorInputs) {
   validateType([num1, num2, num3], "number");
   validateOperators([operation1, operation2]);
 
-  if (num1 > 1000) num1 = 0;
-  if (num2 > 1000) num2 = 0;
-  if (num3 > 1000) num3 = 0;
+  // Task Prerequsitie: ignore numbers bigger than NUMBER_LIMIT
+  if (num1 > NUMBER_LIMIT) num1 = 0;
+  if (num2 > NUMBER_LIMIT) num2 = 0;
+  if (num3 > NUMBER_LIMIT) num3 = 0;
 
-  if (!operation2) {
-    if (operation1 === "+") return num1 + num2;
-    else if (operation1 === "-") return num1 - num2;
-    else if (operation1 === "*") return num1 * num2;
-    else if (operation1 === "/" && num2 === 0)
-      throw new Error("Division by zero");
-    else if (operation1 === "/") return num1 / num2;
-  } else {
-    let total = 0;
-
-    if (operation1 === "*" || operation1 === "/") {
-      if (operation1 === "*") total = num1 * num2;
-      else if (operation1 === "/" && num2 === 0)
-        throw new Error("Division by zero");
-      else if (operation2 === "/") total = num1 / num2;
-
-      if (operation2 === "+") total += num3;
-      else if (operation2 === "-") total -= num3;
-      else if (operation2 === "*") total *= num3;
-      else if (operation2 === "/" && num3 === 0)
-        throw new Error("Division by zero");
-      else if (operation2 === "/") total /= num3;
-    } else if (operation2 === "*" || operation2 === "/") {
-      if (operation2 === "*") total = num2 * num3;
-      else if (operation2 === "/" && num3 === 0)
-        throw new Error("Division by zero");
-      else if (operation2 === "/") total = num2 / num3;
-
-      if (operation1 === "+") total = num1 + total;
-      else if (operation1 === "-") total = num1 - total;
+  if (!operation2) return applyOperation(num1, num2, operation1);
+  else {
+    let total;
+    if (precedence(operation1) > precedence(operation2)) {
+      total = applyOperation(num1, num2, operation1);
+      return applyOperation(total, num3, operation2);
     } else {
-      if (operation1 === "+" && operation2 === "+") total = num1 + num2 + num3;
-      else if (operation1 === "+" && operation2 === "-")
-        total = num1 + num2 - num3;
-      else if (operation1 === "-" && operation2 === "+")
-        total = num1 - num2 + num3;
-      else if (operation1 === "-" && operation2 === "-")
-        total = num1 - num2 - num3;
+      total = applyOperation(num2, num3, operation2);
+      return applyOperation(num1, total, operation1);
     }
-
-    return total;
   }
 }
 
